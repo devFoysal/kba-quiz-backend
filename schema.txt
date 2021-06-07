@@ -1,0 +1,128 @@
+CREATE TABLE post_categories(
+    id tinyint unsigned NOT null AUTO_INCREMENT PRIMARY KEY,
+    icon varchar(50) null,
+    category_en varchar(255) null UNIQUE,
+    category_bn varchar(255) null UNIQUE,
+    priority varchar(3) null,
+    status boolean DEFAULT 0,
+    created_at datetime not null,
+    updated_at timestamp NOT null DEFAULT CURRENT_TIMESTAMP
+)
+
+CREATE TABLE sliders(
+    id tinyint unsigned NOT null AUTO_INCREMENT PRIMARY KEY,
+    slider_desktop varchar(50) NOT null,
+    slider_mobile varchar(50) NOT null,
+    title_en varchar(100) null,
+    title_bn varchar(100) null,
+    description_en text null,
+    description_bn text null,
+    url_en varchar(255) null,
+    url_bn varchar(255) null,
+    content_position_desktop char(1) null,
+    content_position_mobile char(1) null,
+    priority varchar(3) null,
+    status Boolean DEFAULT 0,
+    created_at datetime,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP
+)
+
+CREATE TABLE posts(
+    id tinyint unsigned NOT null AUTO_INCREMENT PRIMARY KEY,
+    post_category_id int unsigned not null,
+    thumbnail varchar(50) NOT null,
+    cover varchar(50) NOT null,
+    title_en varchar(255) null,
+    title_bn varchar(255) null,
+    short_description_en text null,
+    short_description_bn text null,
+    description_en text null,
+    description_bn text null,
+    slug_en text null,
+    slug_bn text null,
+    page_title_en varchar(255) null,
+    page_title_bn varchar(255) null,
+    meta_desc_en text null,
+    meta_desc_bn text null,
+    meta_keywords_en text null,
+    meta_keywords_bn text null,
+    status Boolean DEFAULT 0,
+    created_at datetime,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP
+)
+
+
+CREATE TABLE quizzes(
+    id bigint unsigned NOT null AUTO_INCREMENT PRIMARY KEY,
+    thumbnail varchar(50) NOT null,
+    title_en varchar(255) null,
+    title_bn varchar(255) null,
+    short_description_en text null,
+    short_description_bn text null, 
+    quiz_refrence_en text null,
+    quiz_refrence_bn text null,
+    page_title_en varchar(255) null,
+    page_title_bn varchar(255) null,
+    slug_en text null,
+    slug_bn text null,
+    meta_desc_en text null,
+    meta_desc_bn text null,
+    meta_keywords_en text null,
+    meta_keywords_bn text null,
+    hits int NOT null DEFAULT 1,
+    status Boolean DEFAULT 0,
+    created_at timestamp,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP
+)
+
+
+CREATE TABLE campaigns(
+    id int unsigned NOT null AUTO_INCREMENT PRIMARY KEY,
+    thumbnail varchar(50) NOT null,
+    title_en varchar(255) null,
+    title_bn varchar(255) null,
+    description_en text null,
+    description_bn text null,
+    type Boolean DEFAULT 0,
+    hits int NOT null DEFAULT 1,
+    status Boolean DEFAULT 0,
+    slug_en text null,
+    slug_bn text null,
+    created_at timestamp,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP
+)
+
+CREATE TABLE campaigns_form(
+    id bigint unsigned NOT null AUTO_INCREMENT PRIMARY KEY,
+    userId int unsigned not null,
+    campaignId int unsigned not null,
+    title varchar(255) null,
+    description text null,
+    image varchar(50) null,
+    video text null,
+    status Boolean DEFAULT 0,
+    created_at timestamp,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP
+)
+
+CREATE TABLE questions(
+    quiz_id bigint unsigned not null,
+    id bigint unsigned NOT null AUTO_INCREMENT PRIMARY KEY,
+    thumbnail varchar(50) NOT null,
+    title_en varchar(255) null,
+    title_bn varchar(255) null,
+    status Boolean DEFAULT 0,
+    created_at timestamp,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP
+)
+
+CREATE TABLE answers(
+    question_id bigint unsigned not null,
+    id bigint unsigned NOT null AUTO_INCREMENT PRIMARY KEY,
+    title_en varchar(255) null,
+    title_bn varchar(255) null,
+    right_answer boolean DEFAULT 0,
+    status Boolean DEFAULT 0,
+    created_at timestamp,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP
+)
