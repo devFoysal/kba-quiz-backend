@@ -12,7 +12,9 @@ use Carbon\Carbon;
 use Response;
 use Storage;
 use File;
-
+use App\Leaderboard;
+use App\Models\Participant;
+use DB;
 
 class QuizController extends Controller
 {
@@ -123,4 +125,61 @@ class QuizController extends Controller
         }
     }
     
+    public function getLeaderboard() {
+        // ->map(function($limitData){return $limitData->take(10);})
+        $Leaderboard = Leaderboard::with('participant')->where(['correctAnswer' => 3])->where('finishTime', '>', 0)->orderBy('correctAnswer','DESC')->orderBy('finishTime','ASC')->get();
+        $finalResult = $Leaderboard->groupBy(function($d) {
+                return Carbon::parse($d->created_at)->format('m');
+            })->sortByDesc(function($key, $value){
+                return $value;
+            })->map(function($data,$key) {
+                $filterData = $data->map(function($result, $key) {
+                    return [
+                        'participantId' => $result->participant->id,
+                        'participantAvater' => $result->participant->avater,
+                        'participant' => $result->participant->fullName,
+                        'participantEmail' => $result->participant->email,
+                        'participantContactNumber' => $result->participant->contactNumber,
+                        'correctAnswer' => $result->correctAnswer,
+                        'time' => $result->finishTime,
+                        'date' => date('d F, Y', strtotime($result->created_at)),
+                    ];
+                });
+
+                return $filterData->unique('participantId');
+            })->map(function($limitData){return $limitData->take(10)->values()->all();});
+            // return $finalResult;
+            // ->map(function($data,$key) {
+            //     $filterData = $data->map(function($result, $key) {
+            //         return [
+            //             'participantId' => $result->participant->id,
+            //             'participantAvater' => $result->participant->avater,
+            //             'participant' => $result->participant->fullName,
+            //             'participantEmail' => $result->participant->email,
+            //             'participantContactNumber' => $result->participant->contactNumber,
+            //             'correctAnswer' => $result->correctAnswer,
+            //             'time' => $result->finishTime,
+            //             'date' => date('d F, Y', strtotime($result->created_at)),
+            //         ];
+            //     });
+                
+            //     return $filterData->unique('participantId')->filter(function ($value) { return !is_null($value); })->values()->all();
+            // });
+        // return $finalResult;
+
+        return view('backend.pages.leaderboard.list', ['finalResult' => $finalResult]);
+
+    }
+
+    public function getCertificate($participantId) {
+
+        // return Quiz::with('questions.answers')
+        // ->orderBy('id', 'desc')
+        // ->get();
+
+        $participant = Participant::findOrFail($participantId);
+        // return $participant;
+        return view('backend.pages.leaderboard.certificate', compact('participant'));
+
+    }
 }
